@@ -1,5 +1,4 @@
-
-from collections.abc import Sequence
+"""Classes for representing and solving nonograms."""
 
 
 class Nonoclue:
@@ -15,10 +14,11 @@ class Nonoclue:
 
     @staticmethod
     def _init_clue(stack):
-        """Initialize a clue using a LIFO stack.
+        """Initialize a clue with a stack (LIFO).
 
         This implementation recurses on iterables in *args that contain iterables,
-        but the user shouldn't assume that functionality."""
+        but the user shouldn't assume that functionality.
+        """
         clue = []
 
         while stack:
@@ -46,31 +46,29 @@ class Nonoclue:
         ValueError
             If any integer in the nonoclue is negative.
         """
-        # Add the container list so *args is reversed on the stack.
+        # The container list ensures *args is reversed on the stack.
         self.clue: list[int] = Nonoclue._init_clue([args])
 
     def __len__(self):
+        """Number of continuous lines of filled-in squares in the clue."""
         return len(self.clue)
 
     def __getitem__(self, key):
         return self.clue[key]
 
 
-
-
 class Nonogram:
     """The row clues and column clues that form a nonogram puzzle."""
 
-    def __init__(self, rows: Sequence[Nonoclue], cols: Sequence[Nonoclue]):
+    def __init__(self, rows, cols):
         """Instantiate a nonogram with a sequence of row clues and a sequence of column clues.
 
-        Do not verify if the requirements that the clues impose have a valid solution.
+        Does not verify if the requirements that the clues impose have a valid solution.
 
         Parameters
         ----------
-        rows
-            Sequence of
-        cols
+        rows, cols : Sequence[Nonoclue]
+            Clues imposed by the rows and the columns.
 
         Notes
         -----
