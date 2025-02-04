@@ -1,0 +1,26 @@
+{
+  "name" : "Edge Nonograms",
+  "description" : "Edge case nonograms to test software implementation details.",
+  "data" : [
+    {
+      "name" : "0x0",
+      "description" : "The empty nonogram should match with an empty solution of any size",
+      "height" : null,
+      "width" : null,
+      "clues" : {
+        "row" : [ [0] ],
+        "col" : [ [0] ]
+      }
+    },
+    {
+      "name" : "Empty Clue",
+      "description" : "The empty nonogram should match with an empty solution of any size",
+      "height" : null,
+      "width" : null,
+      "clues" : {
+        "row" : [],
+        "col" : []
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name" : "Base Nonograms",
+  "description" : "Simple nonograms with solutions that are unique to their clues (so the clues can be inferred from the grid).",
+  "data" : [
+    {
+      "name" : "1x1",
+      "gram" :
+      [ [ true ] ]
+    },
+    {
+      "name" : "2x2",
+      "gram" :
+      [ [ true, true ],
+        [ true, true ] ]
+    },
+    {
+      "name" : "2x5",
+      "gram" :
+      [ [ true, true, true, true, true ],
+        [ true, true, true, true, true ] ]
+    }
+  ]
+}
