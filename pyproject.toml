@@ -1,0 +1,16 @@
+[project]
+name = "nonogram"
+version = "0.1.0"
+description = "Nonogram solver."
+authors = [
+  { name="Antonio Caceres", email="antonio@antonio-caceres.com" },
+]
+requires-python = ">=3.12"
+dependencies = []  # Using only Python built-ins for this project.
+
+[project.scripts]
+# None yet.
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

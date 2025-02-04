@@ -1,2 +1,5 @@
 .idea/*
 .venv/*
+
+# Lockfiles
+uv.lock
