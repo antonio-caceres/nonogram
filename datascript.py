@@ -25,8 +25,6 @@ if __name__ == "__main__":
 
     print(json.dumps({
         "name" : name,
-        "height" : len(rows),
-        "width" : len(cols),
         "clues" : {
             "row" : rows,
             "col" : cols,
