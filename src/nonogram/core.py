@@ -27,7 +27,7 @@ class Nonoclue:
                 # test for integer conversion before iteration because of strings
                 num = int(itm)
                 if num < 0:
-                    raise TypeError("Negative numbers are not valid clues.")
+                    raise ValueError("Negative numbers are not valid clues.")
                 if num > 0:  # 0 is a valid clue that is equivalent to an empty clue, so ignore.
                     clue.append(num)
             except TypeError:
