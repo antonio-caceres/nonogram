@@ -116,6 +116,7 @@ class Nonogram:
 
         Better to defer all solution verification to the solver.
         """
+        # TODO: Do empty Nonoclue trimming at the beginning and end.
         self.rows, self.cols = rows, cols
 
     @property
@@ -177,7 +178,7 @@ class Nonogram:
         #  and just have this method instantiate a NonoSol from `solution`.
         col_data = []
         for i in range(len(solution[0])):
-            col_data.append(solution[j][i] for j in range(len(solution)))
+            col_data.append([solution[j][i] for j in range(len(solution))])
 
         return all([
             Nonogram._rows_satisfied(self.rows, solution, bool_func),
