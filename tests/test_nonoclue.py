@@ -8,6 +8,15 @@ _CASES_LINISH = 5  # number of test cases plus-minus one
 _CASES_EXPISH = 5  # if number of cases grow exponentially
 
 
+class BasicInitialization(TestCase):
+    def test_negatives(self):
+        for i in range(_CASES_LINISH):
+            clue = [0] * _CASES_LINISH
+            clue[i] = -(i + 1)
+            with self.subTest(init_arg=clue):
+                self.assertRaises(ValueError, Nonoclue, clue)
+
+
 class EmptyNonoclue(TestCase):
     def test_initialization(self):
         for clue in [[0] * i for i in range(_CASES_LINISH)]:
