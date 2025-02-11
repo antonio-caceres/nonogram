@@ -56,16 +56,16 @@ class Nonoclue:
     def __getitem__(self, key):
         return self.clue[key]
 
-    def satisfied_by(self, sequence, bool_func=bool):
+    def satisfied_by(self, sequence, bool_map=bool):
         """Determine if a boolean sequence satisfies the nonoclue.
 
-        Optionally use `bool_func` to map arbitrary objects to booleans.
+        Optionally use `bool_map` to map arbitrary objects to booleans.
 
         Parameters
         ----------
         sequence : Sequence[T]
             Iterable over objects to match to squares.
-        bool_func : Callable[[T], bool], default=bool
+        bool_map : Callable[[T], bool], default=bool
             Return whether an object represents a filled or empty square.
 
         Returns
@@ -76,8 +76,8 @@ class Nonoclue:
         -----
         - Nonoclues themselves do not impose a total length.
         """
-        # TODO: Build an iterator to do this computation lazily if bool_func is expensive.
-        bool_sequence = [bool_func(x) for x in sequence] + [False]  # add fencepost for last line
+        # TODO: Build an iterator to do this computation lazily if bool_map is expensive.
+        bool_sequence = [bool_map(x) for x in sequence] + [False]  # add fencepost for last line
 
         cur_hint = 0
         line = 0
@@ -131,7 +131,7 @@ class Nonogram:
         return len(self.rows)
 
     @staticmethod
-    def _rows_satisfied(row_clues, row_data, bool_func):
+    def _rows_satisfied(row_clues, row_data, bool_map):
         """Determine if an ordered set of row data satisfies an ordered set of clues."""
         # TODO: Build a more rigorous fitter by removing all empty rows from
         #  the beginning and end of both clue and data.
@@ -143,19 +143,19 @@ class Nonogram:
             # The empty list matches only with the empty clue (no lines).
             row = row_data[i] if i < len(row_data) else []
 
-            if not clue.satisfied_by(row, bool_func):
+            if not clue.satisfied_by(row, bool_map):
                 return False
 
         return True
 
-    def satisfied_by(self, solution, bool_func=bool, row_major=True):
+    def satisfied_by(self, solution, bool_map=bool, row_major=True):
         """Determine if a boolean array satisfies the nonogram.
 
         Parameters
         ----------
         solution : Sequence[Sequence[T]]
             Two-dimensional array of objects to match to squares.
-        bool_func : Callable[[T], bool], default=bool
+        bool_map : Callable[[T], bool], default=bool
             Return whether an object represents a filled or empty square.
         row_major : bool, default=True
             If the solution is in row-major order.
@@ -169,7 +169,7 @@ class Nonogram:
         Nonoclue.satisfied_by
         """
         if not row_major:  # reduce to the row-major case
-            return Nonogram(self.cols, self.rows).satisfied_by(solution, bool_func)
+            return Nonogram(self.cols, self.rows).satisfied_by(solution, bool_map)
 
         # TODO: This rotation is the only component actually enforcing a square `solution`.
         #  Can I build an algorithm where `solution` just is a HashSet of coordinate membership?
@@ -181,6 +181,6 @@ class Nonogram:
             col_data.append([solution[j][i] for j in range(len(solution))])
 
         return all([
-            Nonogram._rows_satisfied(self.rows, solution, bool_func),
-            Nonogram._rows_satisfied(self.cols, col_data, bool_func)
+            Nonogram._rows_satisfied(self.rows, solution, bool_map),
+            Nonogram._rows_satisfied(self.cols, col_data, bool_map)
         ])
