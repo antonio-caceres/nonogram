@@ -1,6 +1,30 @@
 """Classes for representing and solving nonograms."""
 
 
+class Nonogrid:
+    """Fixed-size two-dimensional grid for developing and verifying a nonogram solution."""
+
+    # TODO: This class member allows me to make the double-indexed access grid[r][c] work
+    #   without having the list lengths be malleable.
+    #   The alternative is to remove Row and index into into a nonogrid with a tuple grid[r, c]
+    #   but I wonder if the syntax difference would be a good or a bad thing...
+    #   it shouldn't make a lot of sense to ever do grid[r]
+    class Row:
+        """Fixed-length list of modifiable values.
+
+        Enable Nonogrid to provide double-indexed access.
+        """
+
+        def __init__(self, length, data):
+            data_iter = iter(data)
+            try:
+                self._data = [next(data_iter)] * length
+            except StopIteration:
+                raise ValueError("Data provided must fill the row.\n"
+                                 "This error is considered an error in the implementation "
+                                 "of Nonogrid.__init__.")
+
+
 class Nonoclue:
     """A clue to either a row or column of a nonogram puzzle.
 
