@@ -2,27 +2,168 @@
 
 
 class Nonogrid:
-    """Fixed-size two-dimensional grid for developing and verifying a nonogram solution."""
+    """Fixed-size two-dimensional grid for developing and verifying a nonogram solution.
 
-    # TODO: This class member allows me to make the double-indexed access grid[r][c] work
-    #   without having the list lengths be malleable.
-    #   The alternative is to remove Row and index into into a nonogrid with a tuple grid[r, c]
-    #   but I wonder if the syntax difference would be a good or a bad thing...
-    #   it shouldn't make a lot of sense to ever do grid[r]
-    class Row:
-        """Fixed-length list of modifiable values.
+    Provide read-write access to individual elements by indexing on a tuple ``grid[r,c]``.
 
-        Enable Nonogrid to provide double-indexed access.
+    Notes
+    -----
+    Indexing with a tuple provides numerous benefits, even though it is unintuitive for the user:
+
+    - **Allows for flexibility in the implementation details.**
+      For example, a nonogrid solving large, sparse nonograms should use a hashset instead.
+    - Emphasizes that the individual elements are the only mutable pieces of the rows.
+    - Enforces using the :attr:`~Nonogrid.row` and :attr:`~Nonogrid.col` methods for symmetry
+      by not providing access to a row index.
+
+    The methods :attr:`Nonogrid.row`, :attr:`Nonogrid.col`, :attr:`Nonogrid.rows`,
+    and :attr:`Nonogrid.cols` all return iterators.
+
+    - Returning a list could mislead users into thinking these methods can mutate the
+    """
+
+    def _inf_default_gen(self, iterator, default):
+        # This is an **infinite** iterator and should *not* be used in a loop.
+        yield from iterator
+        while True:
+            yield self._default_val if default is None else default
+
+    def __init__(self, height, width, data=(), default_val=None, bool_map=bool):
+        """Instantiate a nonogrid and optionally fill in initial data.
+
+        Parameters
+        ----------
+        height, width : int
+            Height and width of the grid (which should match the dimensions of the nonogram).
+        data : Sequence[Sequence[T]], optional, default=tuple()
+            Set of values with which to initially fill in the grid.
+            `data` is truncated or padded with `default_val` to match the given grid dimensions.
+            Values are mapped to booleans at verification using `bool_map`.
+        default_val : T, default=None
+            Default value with which to fill in the initial grid.
+        bool_map : Callable[[T], bool], default=bool
+            Return whether a grid value represents a filled or empty square.
         """
+        self._width, self._height = width, height
+        self._default_val = default_val
+        self._bool_map = bool
+        # We need the dimensions of the grid to be ready for the calls to set_row.
+        self._grid = [[None] * self.width] * self.height
 
-        def __init__(self, length, data):
-            data_iter = iter(data)
-            try:
-                self._data = [next(data_iter)] * length
-            except StopIteration:
-                raise ValueError("Data provided must fill the row.\n"
-                                 "This error is considered an error in the implementation "
-                                 "of Nonogrid.__init__.")
+        row_iter = self._inf_default_gen(data, [])
+        for r in range(self.height):
+            self.set_row(r, next(row_iter))
+
+    @classmethod
+    def for_nonogram(cls, nonogram, *args, **kwargs):
+        """Instantiate a nonogrid with width and height matching the given nonogram.
+
+        See :attr:`Nonogrid.__init__` for information on additional parameters.
+        """
+        return cls(nonogram.height, nonogram.width, *args, **kwargs)
+
+    @property
+    def dims(self):
+        """Grid dimensions as a tuple *(height, width)*."""
+        return self._height, self._width
+
+    @property
+    def width(self):
+        """Number of columns in the nonogram grid."""
+        return self._width
+
+    @property
+    def height(self):
+        """Number of rows in the nonogram grid."""
+        return self._height
+
+    @property
+    def bool_map(self):
+        """Function used to map values in the grid to booleans."""
+        return self._bool_map
+
+    def _validate_idx(self, idx):
+        r, c = idx
+        if not (0 <= r < self.height and 0 <= c < self.width):
+            raise IndexError(f"Index (row={r}, col={c}) invalid for "
+                             f"grid dimensions ()")
+        return r, c
+
+    def __getitem__(self, idx: tuple[int, int]):
+        """Get value in the grid at `idx` ``(row,col)``."""
+        r, c = self._validate_idx(idx)
+        return self._grid[r][c]
+
+    def __setitem__(self, idx: tuple[int, int], val):
+        """Set value in the grid at `idx` ``(row,col)`` to `val`."""
+        r, c = self._validate_idx(idx)
+        self._grid[r][c] = val
+
+    def get(self, r, c):
+        """Get value in the grid at row `r` and column `c`."""
+        return self[r, c]
+
+    def set(self, r, c, itm):
+        """Set value in the grid at row `r` and column `c` to `val`."""
+        self[r, c] = itm
+
+    def row(self, r):
+        """Iterator over the row of values at a given index."""
+        for c in range(self.width):
+            yield self[r, c]
+
+    def col(self, c):
+        """Iterator over the row of values at a given index."""
+        for r in range(self.height):
+            yield self[r, c]
+
+    def set_row(self, r, data, default_val=None):
+        """Fill the row `r` with values from `data`.
+
+        Parameters
+        ----------
+        r : int
+            Index of the row to modify.
+        data : Iterable
+            Data to fill into the row.
+            Truncated if `data` is too long, and padded with `default_val` if `data` is too short.
+        default_val : optional, default=None
+            Default value used to pad `data` to the correct length.
+            If `default_val` is ``None``, falls back to the original default value
+            provided in the Nonogrid's constructor.
+
+        Notes
+        -----
+        If the nonogrid was provided a default value at instantiation that is not ``None``,
+        it is impossible to make ``None`` the default value in this method.
+        This is a reasonable tradeoff so that solvers can pass in their preferred
+        `default_val` at instantiation and then forget it.
+        If ``None`` is going to be a valid entry in a solver, we expect any reasonable use case
+        to let ``None`` be the default value in the entire grid.
+        """
+        data_iter = self._inf_default_gen(next(data), default_val)
+        for c in range(self.width):
+            self[r,c] = next(data_iter)
+
+    def set_col(self, c, data, default_val=None):
+        """Fill the column `c` with values from `data`.
+
+        See :attr:`Nonogrid.set_row` for parameter details.
+        """
+        data_iter = self._inf_default_gen(next(data), default_val)
+        for r in range(self.height):
+            self[r,c] = next(data_iter)
+
+
+    def rows(self):
+        """Iterator over all rows in the grid."""
+        for r in range(self.height):
+            yield self.row(r)
+
+    def cols(self):
+        """Iterator over all columns in the grid."""
+        for c in range(self.width):
+            yield self.col(c)
 
 
 class Nonoclue:
