@@ -32,11 +32,12 @@ class BasicPropertyInitialization(TestCase):
 
 
 class GridAccess(TestCase):
-    SQUARE_DATA = [[0, 1, 2, 3, 4],
-                   [5, 6, 7, 8, 9],
-                   [10, 11, 12, 13, 14],
-                   [15, 16, 17, 18, 19],
-                   [20, 21, 22, 23, 24]]
+    # 0 should not be in the grid because it is falsey and we compare against False.
+    SQUARE_DATA = [[1, 2, 3, 4, 5],
+                   [6, 7, 8, 9, 10],
+                   [11, 12, 13, 14, 15],
+                   [16, 17, 18, 19, 20],
+                   [21, 22, 23, 24, 25]]
 
     def test_small_grid_access(self):
         max_side = len(GridAccess.SQUARE_DATA)
@@ -46,6 +47,20 @@ class GridAccess(TestCase):
                 for r, c in itertools.product(range(exp_height), range(exp_width)):
                     self.assertEqual(grid[r, c], GridAccess.SQUARE_DATA[r][c])
                     self.assertEqual(grid.get(r, c), GridAccess.SQUARE_DATA[r][c])
+
+    def test_default_val(self):
+        side_len = len(GridAccess.SQUARE_DATA) + 1
+
+        for args in [(side_len, side_len, GridAccess.SQUARE_DATA),
+                     (side_len, side_len, GridAccess.SQUARE_DATA, False)]:
+            exp_default = None if len(args) < 4 else args[3]
+            with self.subTest(default_val=exp_default):
+                grid = Nonogrid(*args)
+                for r, c in itertools.product(range(side_len), range(side_len)):
+                    outside_arr = len(GridAccess.SQUARE_DATA) in {r, c}
+                    exp_result = exp_default if outside_arr else GridAccess.SQUARE_DATA[r][c]
+                    self.assertEqual(grid[r, c], exp_result)
+                    self.assertEqual(grid.get(r, c), exp_result)
 
     def test_invalid_negative(self):
         grid = Nonogrid(0, 0)
