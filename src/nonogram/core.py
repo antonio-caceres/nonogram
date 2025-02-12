@@ -29,7 +29,7 @@ class Nonogrid:
             yield self._default_val if default is None else default
 
     def __init__(self, height, width, data=(), default_val=None, bool_map=bool):
-        """Instantiate a nonogrid and optionally fill in initial data.
+        """Initialize a nonogrid and optionally fill in initial data.
 
         Parameters
         ----------
@@ -56,7 +56,7 @@ class Nonogrid:
 
     @classmethod
     def for_nonogram(cls, nonogram, *args, **kwargs):
-        """Instantiate a nonogrid with width and height matching the given nonogram.
+        """Initialize a nonogrid with width and height matching the given nonogram.
 
         See :attr:`Nonogrid.__init__` for information on additional parameters.
         """
@@ -134,10 +134,10 @@ class Nonogrid:
 
         Notes
         -----
-        If the nonogrid was provided a default value at instantiation that is not ``None``,
+        If the nonogrid was provided a default value at initialization that is not ``None``,
         it is impossible to make ``None`` the default value in this method.
         This is a reasonable tradeoff so that solvers can pass in their preferred
-        `default_val` at instantiation and then forget it.
+        `default_val` at initialization and then forget it.
         If ``None`` is going to be a valid entry in a solver, we expect any reasonable use case
         to let ``None`` be the default value in the entire grid.
         """
@@ -265,7 +265,7 @@ class Nonogram:
     """The row clues and column clues that form a nonogram puzzle."""
 
     def __init__(self, rows, cols):
-        """Instantiate a nonogram with a sequence of row clues and a sequence of column clues.
+        """Initialize a nonogram with a sequence of row clues and a sequence of column clues.
 
         Does not verify if the requirements that the clues impose have a valid solution.
 
@@ -340,7 +340,7 @@ class Nonogram:
         #  Can I build an algorithm where `solution` just is a HashSet of coordinate membership?
         #  Probably unwise. Nonograms are generally dense so a hashset seems inefficient.
         # TODO: Maybe I can build a NonoSol class to abstract away the 2D array behind a class,
-        #  and just have this method instantiate a NonoSol from `solution`.
+        #  and just have this method create a NonoSol from `solution`.
         col_data = []
         for i in range(len(solution[0])):
             col_data.append([solution[j][i] for j in range(len(solution))])
