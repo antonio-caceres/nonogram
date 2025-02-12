@@ -36,6 +36,6 @@ class NonogramDatasetLoader(Enum):
 
     def load(self):
         # noinspection PyUnresolvedReferences
-        filepath = NonogramDatasets._DATA_FILE_PREFIX.joinpath(self.value)
+        filepath = NonogramDatasetLoader._DATA_FILE_PREFIX.joinpath(self.value)
         with open(filepath, mode="rt") as f:
             return json.load(f)
