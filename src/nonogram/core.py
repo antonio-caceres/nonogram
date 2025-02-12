@@ -29,10 +29,10 @@ class Nonoclue:
     """A clue to either a row or column of a nonogram puzzle.
 
     Takes the form of a sequence of integers.
-    A clue of the form `(a, b, c)` imposes exactly lines of length `a`, `b`, and `c` filled
+    A clue of the form *(a, b, c)* imposes exactly lines of length *a*, *b*, and *c* filled
     squares separated by at least one empty square.
 
-    Represents the clue `(0)` (all squares empty) as the empty list `[]` to minimize edge cases
+    Represents the clue *(0)* (all squares empty) as the empty list ``[]`` to minimize edge cases
     for the solver.
     """
 
@@ -190,7 +190,7 @@ class Nonogram:
 
         See Also
         --------
-        Nonoclue.satisfied_by
+        :attr:`Nonoclue.satisfied_by`
         """
         if not row_major:  # reduce to the row-major case
             return Nonogram(self.cols, self.rows).satisfied_by(solution, bool_map)
