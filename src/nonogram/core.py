@@ -46,7 +46,7 @@ class Nonogrid:
         """
         self._width, self._height = width, height
         self._default_val = default_val
-        self._bool_map = bool
+        self._bool_map = bool_map
         # We need the dimensions of the grid to be ready for the calls to set_row.
         self._grid = [[None] * self.width] * self.height
 
@@ -141,7 +141,7 @@ class Nonogrid:
         If ``None`` is going to be a valid entry in a solver, we expect any reasonable use case
         to let ``None`` be the default value in the entire grid.
         """
-        data_iter = self._inf_default_gen(next(data), default_val)
+        data_iter = self._inf_default_gen(data, default_val)
         for c in range(self.width):
             self[r,c] = next(data_iter)
 
