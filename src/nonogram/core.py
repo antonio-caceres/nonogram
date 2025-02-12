@@ -1,6 +1,8 @@
 """Classes for representing and solving nonograms."""
 
 
+# TODO: Move this into an abstract class and build
+#   additional implementations for sparse grids and cached bool_map grids.
 class Nonogrid:
     """Fixed-size two-dimensional grid for developing and verifying a nonogram solution.
 
