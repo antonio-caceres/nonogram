@@ -68,14 +68,14 @@ class Nonogrid:
         return self._height, self._width
 
     @property
-    def width(self):
-        """Number of columns in the nonogram grid."""
-        return self._width
-
-    @property
     def height(self):
         """Number of rows in the nonogram grid."""
         return self._height
+
+    @property
+    def width(self):
+        """Number of columns in the nonogram grid."""
+        return self._width
 
     @property
     def bool_map(self):
