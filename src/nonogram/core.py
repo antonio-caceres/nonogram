@@ -44,7 +44,7 @@ class Nonogrid:
         bool_map : Callable[[T], bool], default=bool
             Return whether a grid value represents a filled or empty square.
         """
-        self._width, self._height = width, height
+        self._height, self._width = height, width
         self._default_val = default_val
         self._bool_map = bool_map
         # We need the dimensions of the grid to be ready for the calls to set_row.
