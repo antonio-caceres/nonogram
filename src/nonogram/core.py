@@ -47,7 +47,6 @@ class Nonogrid:
         self._height, self._width = height, width
         self._default_val = default_val
         self._bool_map = bool_map
-        # We need the dimensions of the grid to be ready for the calls to set_row.
         self._grid = []
 
         row_iter = self._inf_default_gen(data, [])
