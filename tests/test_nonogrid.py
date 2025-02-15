@@ -42,6 +42,13 @@ def _gen_setter_lambdas():
     return [("__setitem__", lambda grid, r, c, itm: grid.__setitem__((r, c), itm)),
             (".set", lambda grid, r, c, itm: grid.set(r, c, itm))]
 
+def _verify_against_data(testcase, data, grid, bounds, getter, exp_default):
+    for r, c in itertools.product(range(bounds[0]), range(bounds[1])):
+        if r >= len(data) or c >= len(data[0]):
+            testcase.assertEqual(getter(grid, r, c), exp_default)
+        else:
+            testcase.assertEqual(getter(grid, r, c), data[r][c])
+
 
 class GridAccess(TestCase):
     # 0 should not be in the grid because it is falsey and we compare against False.
@@ -51,20 +58,18 @@ class GridAccess(TestCase):
                    [16, 17, 18, 19, 20],
                    [21, 22, 23, 24, 25]]
 
-    def _verify_against_data(self, grid, bounds, getter, exp_default):
-        for r, c in itertools.product(range(bounds[0]), range(bounds[1])):
-            if r >= len(GridAccess.SQUARE_DATA) or c >= len(GridAccess.SQUARE_DATA):
-                self.assertEqual(getter(grid, r, c), exp_default)
-            else:
-                self.assertEqual(getter(grid, r, c), GridAccess.SQUARE_DATA[r][c])
-
     def test_small_grid_access(self):
         max_side = len(GridAccess.SQUARE_DATA)
         for desc, getter in _gen_getter_lambdas():
             for exp_height, exp_width in itertools.product(range(max_side), range(max_side)):
                 with self.subTest(getter=desc, height=exp_height, width=exp_width):
                     grid = Nonogrid(exp_height, exp_width, GridAccess.SQUARE_DATA)
-                    self._verify_against_data(grid, (exp_height, exp_width), getter, None)
+                    _verify_against_data(self,
+                                         GridAccess.SQUARE_DATA,
+                                         grid,
+                                         (exp_height, exp_width),
+                                         getter,
+                                         None)
 
     def test_default_val(self):
         side_len = len(GridAccess.SQUARE_DATA) + 1
@@ -74,7 +79,12 @@ class GridAccess(TestCase):
                 exp_default = None if len(args) < 4 else args[3]
                 with self.subTest(getter=desc, default_val=exp_default):
                     grid = Nonogrid(*args)
-                    self._verify_against_data(grid, (side_len, side_len), getter, exp_default)
+                    _verify_against_data(self,
+                                         GridAccess.SQUARE_DATA,
+                                         grid,
+                                         (side_len, side_len),
+                                         getter,
+                                         None)
 
 
 class InvalidAccess(TestCase):
