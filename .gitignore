@@ -1,5 +1,9 @@
 .idea/*
 .venv/*
 
+# Cache Files
+__pycache__/
+*.py[cod]
+
 # Lockfiles
 uv.lock
