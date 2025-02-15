@@ -1,5 +1,9 @@
 
+from abc import ABC, abstractmethod
 from enum import Enum
+
+from nonogram import Nonogram, Nonogrid
+
 
 class SolveFailure(Enum):
     """Flags to signal whether a solve attempt concludes that no solution to the nonogram exists.
@@ -86,3 +90,90 @@ class SolveFailure(Enum):
         a solution or a :py:class:`SolveFailure`.
         """
         return False
+
+
+class NonogramSolver(ABC):
+    """Abstract class of a nonogram solver.
+
+    Provides implementations of :py:meth:`~NonogramSolver.solve` and
+    :py:meth:`~NonogramSolver.solve_total` based on the abstract implementation of
+    :py:meth:`~NonogramSolver.max_sat`.
+
+    Notes
+    -----
+    I implemented a configuration class that carried default values for some of the keyword
+    arguments to the functions provided by :py:class:`NonogramSolver`.
+    This configuration class also included a parameter ``fail_on_unsolvable``
+    which changed the behavior of :py:attr:`SolveFailure.DNE` returns to raising an error.
+
+    This implementation required the use of a metaclass or a class decorator,
+    and eventually, I figured that the configuration was not important enough;
+    it would be better to let the user do what it wants with the return value.
+    """
+
+    def __init__(self, nonogram: Nonogram):
+        """Initialize a solver with a nonogram and configuration values.
+
+        Parameters
+        ----------
+        nonogram
+            Nonogram that this solver will attempt to solve.
+        """
+        self.nonogram = nonogram
+
+    @abstractmethod
+    def solve(self) -> Nonogrid | SolveFailure:
+        """Find a solution to the nonogram.
+
+        If multiple solutions to the nonogram exist, can return any valid solution.
+        Certain solver implementations can provide guarantees about which solution is returned
+        if multiple exist.
+
+        Returns
+        -------
+        Nonogrid
+            The grid representing the solution if a solution was found.
+        :py:attr:`SolveFailure.DNE`
+            If the nonogram is unsolvable.
+        :py:attr:`SolveFailure.INC`
+            If the solver failed to solve the nonogram, but could not determine if a solution existed.
+        """
+
+    # I'm not 100% sure how I want to implement the deterministic vs probabilistic solvers
+    # from a class structure perspective.
+    # I am considering just having the solver class above and then having
+    # subclasses with the methods below.
+    # I've decided that I will know best how to proceed once I've written some solvers.
+    # Leaving all my incomplete work here.
+
+    # def solve_total(self, *, complete=True) -> set[Nonogrid] | SolveFailure:
+    #     """Find all solutions to the nonogram.
+    #
+    #     Does not return an incomplete set of nonogram solutions; even if the solver finds
+    #     a subset of valid solutions, it should return :py:attr:`SolveFailure.INC` if it
+    #     cannot conclude that there exist other solutions
+    #
+    #     Returns
+    #     -------
+    #     The *complete set* of nonogram solutions if all solutions were found,
+    #     :py:attr:`SolveFailure.DNE` if no solution exists, and :py:attr:`SolveFailure.INC`
+    #     if the completeness of the set could not be determined.
+    #     """
+    #
+    #
+    # @abstractmethod
+    # def max_sat(self, *, collect=False):
+    #     """Find a grid that maximally satisfies the clues to the nonogram.
+    #
+    #     If the nonogram has a solution, this method will find a solution to the nonogram.
+    #
+    #     Parameters
+    #     ----------
+    #     collect : bool, default=False
+    #         If this method should collect all the grids that maximally satisfy the nonogram.
+    #
+    #     Returns
+    #     -------
+    #
+    #     """
+
