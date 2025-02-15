@@ -15,11 +15,11 @@ class Nonogrid:
     - **Allows for flexibility in the implementation details.**
       For example, a nonogrid solving large, sparse nonograms should use a hashset instead.
     - Emphasizes that the individual elements are the only mutable pieces of the rows.
-    - Enforces using the :attr:`~Nonogrid.row` and :attr:`~Nonogrid.col` methods for symmetry
+    - Enforces using the :py:meth:`~Nonogrid.row` and :py:meth:`~Nonogrid.col` methods for symmetry
       by not providing access to a row index.
 
-    The methods :attr:`Nonogrid.row`, :attr:`Nonogrid.col`, :attr:`Nonogrid.rows`,
-    and :attr:`Nonogrid.cols` all return iterators.
+    The methods :py:meth:`Nonogrid.row`, :py:meth:`Nonogrid.col`, :py:meth:`Nonogrid.rows`,
+    and :py:meth:`Nonogrid.cols` all return iterators.
 
     - Returning a list could mislead users into thinking these methods can mutate the
     """
@@ -60,7 +60,7 @@ class Nonogrid:
     def for_nonogram(cls, nonogram, *args, **kwargs):
         """Initialize a nonogrid with width and height matching the given nonogram.
 
-        See :attr:`Nonogrid.__init__` for information on additional parameters.
+        See :py:meth:`Nonogrid.__init__` for information on additional parameters.
         """
         return cls(nonogram.height, nonogram.width, *args, **kwargs)
 
@@ -150,12 +150,11 @@ class Nonogrid:
     def set_col(self, c, data, default_val=None):
         """Fill the column `c` with values from `data`.
 
-        See :attr:`Nonogrid.set_row` for parameter details.
+        See :py:meth:`Nonogrid.set_row` for parameter details.
         """
         data_iter = self._inf_default_gen(next(data), default_val)
         for r in range(self.height):
             self[r,c] = next(data_iter)
-
 
     def rows(self):
         """Iterator over all rows in the grid."""
@@ -273,7 +272,7 @@ class Nonogram:
 
         Parameters
         ----------
-        rows, cols : Sequence[Nonoclue]
+        rows, cols : Sequence[:py:class:`Nonoclue`]
             Clues imposed by the rows and the columns.
 
         Notes
@@ -333,7 +332,7 @@ class Nonogram:
 
         See Also
         --------
-        :attr:`Nonoclue.satisfied_by`
+        :py:meth:`Nonoclue.satisfied_by`
         """
         if not row_major:  # reduce to the row-major case
             return Nonogram(self.cols, self.rows).satisfied_by(solution, bool_map)
