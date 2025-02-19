@@ -37,7 +37,7 @@ class Nonogrid:
         ----------
         height, width : int
             Height and width of the grid (which should match the dimensions of the nonogram).
-        data : Sequence[Sequence[T]], optional, default=tuple()
+        data : Iterable[Iterable[T]], optional, default=tuple()
             Set of values with which to initially fill in the grid.
             `data` is truncated or padded with `default_val` to match the given grid dimensions.
             Values are mapped to booleans at verification using `bool_map`.
@@ -165,6 +165,12 @@ class Nonogrid:
         """Iterator over all columns in the grid."""
         for c in range(self.width):
             yield self.col(c)
+
+    def __copy__(self):
+        # TODO: If Nonogrid is subclassed, will this implementation cause problems?
+        return Nonogrid(self.height, self.width, self.rows(), bool_map=self.bool_map)
+
+    # TODO: add __deepcopy__() method
 
 
 class Nonoclue:
@@ -295,6 +301,8 @@ class Nonogram:
     def height(self) -> int:
         """Total number of rows (i.e., number of squares in a column)."""
         return len(self.rows)
+
+    # TODO: Remove the satisfaction methods from the Nonogram class.
 
     @staticmethod
     def _rows_satisfied(row_clues, row_data, bool_map):
