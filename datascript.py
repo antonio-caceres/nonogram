@@ -6,13 +6,12 @@ def parse_rule_input():
     print("For each rule, input the line lengths separated by spaces.\n"
           "Enter an empty rule to conclude the nonogram.")
     rules = []
-    while row := input(""):
+    while row := input("> "):
         rules.append([int(token) for token in row.split()])
     return rules
 
 
-
-if __name__ == "__main__":
+def rule_input():
     title = "JSON Nonogram Input Script"
     print(title + "\n" + "-" * len(title))
 
@@ -23,12 +22,14 @@ if __name__ == "__main__":
     print("Input Column Rules.")
     cols = parse_rule_input()
 
-    print(json.dumps({
+    return {
         "name" : name,
         "clues" : {
             "row" : rows,
             "col" : cols,
         },
-    }))
+    }
 
 
+if __name__ == "__main__":
+    print(json.dumps(rule_input()))
