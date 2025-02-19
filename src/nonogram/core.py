@@ -263,6 +263,7 @@ class Nonoclue:
                         line != self[cur_hint]):
                     return False
                 cur_hint += 1
+                line = 0
 
         # Did we see all the expected lines?
         return cur_hint == len(self)
