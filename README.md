@@ -33,4 +33,7 @@ Constraints were imposed both by the Recurse Center and by myself.
 - *Self*: No research on existing nonogram solver algorithms.
   - The algorithm development is the fun part!
 
-[//]: # (TODO: Instructions on how to use.)
+### Instructions
+
+I use [`uv`](https://github.com/astral-sh/uv).
+Clone the repo and `uv run main.py` should work out of the box.
