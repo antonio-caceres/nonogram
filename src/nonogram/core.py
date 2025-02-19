@@ -1,4 +1,5 @@
 """Classes for representing and solving nonograms."""
+# TODO: Write some repr methods.
 
 
 # TODO: Move this into an abstract class and build
