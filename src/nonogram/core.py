@@ -20,16 +20,15 @@ class Nonogrid:
     The methods :py:meth:`Nonogrid.row`, :py:meth:`Nonogrid.col`, :py:meth:`Nonogrid.rows`,
     and :py:meth:`Nonogrid.cols` all return iterators.
 
-    - Returning a list could mislead users into thinking these methods can mutate the
+    - Returning a list could mislead users into thinking these methods can mutate the entire row.
     """
-
     def _inf_default_gen(self, iterator, default):
         # This is an **infinite** iterator and should *not* be used in a loop.
         yield from iterator
         while True:
             yield self._default_val if default is None else default
 
-    def __init__(self, height, width, data=(), default_val=None, bool_map=bool):
+    def __init__(self, height, width, data=(), default_val=None):
         """Initialize a nonogrid and optionally fill in initial data.
 
         Parameters
@@ -39,15 +38,12 @@ class Nonogrid:
         data : Iterable[Iterable[T]], optional, default=tuple()
             Set of values with which to initially fill in the grid.
             `data` is truncated or padded with `default_val` to match the given grid dimensions.
-            Values are mapped to booleans at verification using `bool_map`.
+            Values are cast to booleans at verification.
         default_val : T, default=None
             Default value with which to fill in the initial grid.
-        bool_map : Callable[[T], bool], default=bool
-            Return whether a grid value represents a filled or empty square.
         """
         self._height, self._width = height, width
         self._default_val = default_val
-        self._bool_map = bool_map
         self._grid = []
 
         row_iter = self._inf_default_gen(data, [])
@@ -78,17 +74,11 @@ class Nonogrid:
         """Number of columns in the nonogram grid."""
         return self._width
 
-    @property
-    def bool_map(self):
-        """Function used to map values in the grid to booleans."""
-        return self._bool_map
-
     def __repr__(self):
         return "".join((f"{type(self).__name__}(",
                         f"{self.height}, ",
                         f"{self.width}, ",
                         f"default_val={self._default_val}, ",
-                        f"bool_map={self._bool_map}, ",
                         f"data={self._grid}, ",
                         f")"))
 
@@ -180,7 +170,7 @@ class Nonogrid:
 
     def __copy__(self):
         # TODO: If Nonogrid is subclassed, will this implementation cause problems?
-        return Nonogrid(self.height, self.width, self.rows(), bool_map=self.bool_map)
+        return Nonogrid(self.height, self.width, self.rows())
 
     # TODO: add __deepcopy__() method
 
@@ -244,24 +234,18 @@ class Nonoclue:
         return self.clue[key]
 
     @staticmethod
-    def _bool_iter(sequence, bool_map):
-        """Helper iterator for use in :py:meth:`~Nonoclue.satisfied_by`."""
+    def _bool_iter(sequence):
         for itm in sequence:
-            yield bool_map(itm)
-        # fencepost here so the satisfaction algorithm doesn't need it
+            yield bool(itm)
         yield False
 
-    def satisfied_by(self, sequence, bool_map=bool):
+    def satisfied_by(self, sequence):
         """Determine if a boolean sequence satisfies the nonoclue.
-
-        Optionally use `bool_map` to map arbitrary objects to booleans.
 
         Parameters
         ----------
         sequence : Sequence[T]
             Iterable over objects to match to squares.
-        bool_map : Callable[[T], bool], default=bool
-            Return whether an object represents a filled or empty square.
 
         Returns
         -------
@@ -276,7 +260,7 @@ class Nonoclue:
 
         # TODO: Fail this as early as possible.
         # DepTODO: Provide additional context around where it fails.
-        for square in Nonoclue._bool_iter(sequence, bool_map):
+        for square in Nonoclue._bool_iter(sequence):
             line += square
             if not square and line > 0:  # non-empty line finished
                 if (cur_hint == len(self) or  # line should not exist
@@ -344,7 +328,7 @@ class Nonogram:
         return f"{type(self).__name__}({self.rows}, {self.cols})"
 
     @staticmethod
-    def _clue_sat_count(clues, data_iter, bool_map):
+    def _clue_sat_count(clues, data_iter):
         """Determine how many clues an iterator over data satisfies.
 
         Any fitting to `clues` and `data_iter` should be handled before calling this method.
@@ -355,7 +339,7 @@ class Nonogram:
             If the lengths of `clues` and `data_iter` do not match.
         """
         zipped = zip(clues, data_iter, strict=True)
-        return sum(clue.satisfied_by(line, bool_map) for clue, line in zipped)
+        return sum(clue.satisfied_by(line) for clue, line in zipped)
 
     def satisfied_count(self, grid):
         """Determine how many clues in the nonogram are satisfied by a nonogrid.
@@ -371,8 +355,8 @@ class Nonogram:
         """
         # TODO: Write fitting algorithm or document that fitting must be done before calling.
         # TODO: Check width and height to match.
-        row_clue_count = Nonogram._clue_sat_count(self.rows, grid.rows(), grid.bool_map)
-        col_clue_count = Nonogram._clue_sat_count(self.cols, grid.cols(), grid.bool_map)
+        row_clue_count = Nonogram._clue_sat_count(self.rows, grid.rows())
+        col_clue_count = Nonogram._clue_sat_count(self.cols, grid.cols())
         return row_clue_count + col_clue_count
 
 
