@@ -7,19 +7,6 @@ from nonogram.core import Nonoclue
 from nonogram.solve.core import SolveFailure, NonogramSolver
 
 
-# TODO: this method needs to go somewhere else :((
-# TODO: this method does not consider if the dimensions of the two do not match :(
-# TODO: caching what
-def check_max_sat(grid, gram):
-    total_clues = 0
-
-    for data, clue in chain(zip(grid.rows(), gram.rows), zip(grid.cols(), gram.cols)):
-        total_clues += Nonoclue(clue).satisfied_by(data, bool_map=grid.bool_map)
-        if grid._grid == [[True, False, True]]:
-            print(total_clues)
-
-    return total_clues
-
 
 # TODO: Add branch and bound optimizations to both these classes.
 
@@ -50,7 +37,7 @@ class NaiveSolver(NonogramSolver):
         """Find a grid that maximizes the number of satisfied clues in the nonogram."""
         maxim_num, maxim_list = 0, []
         for grid in self._grid_iterator():
-            clue_sat = check_max_sat(grid, self.nonogram)
+            clue_sat = self.nonogram.satisfied_count(grid)
             # if list(grid.rows())[0] == [True, False, True]:
             #     print(clue_sat)
             if clue_sat == maxim_num:
@@ -58,9 +45,7 @@ class NaiveSolver(NonogramSolver):
             if clue_sat > maxim_num:
                 maxim_num, maxim_list = clue_sat, [grid]
         if not collect:
-            if not maxim_list:
-                return SolveFailure.DNE
-            return maxim_num, maxim_list[0]
+            return maxim_num, maxim_list[0] if maxim_list else SolveFailure.DNE
         return maxim_num, maxim_list
 
 
