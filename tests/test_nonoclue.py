@@ -4,14 +4,13 @@ from unittest import TestCase
 from nonogram.core import Nonoclue
 
 
-_CASES_LINISH = 5  # number of test cases plus-minus one
-_CASES_EXPISH = 5  # if number of cases grow exponentially
 
 
-class BasicInitialization(TestCase):
+class InitializationErrors(TestCase):
     def test_negatives(self):
-        for i in range(_CASES_LINISH):
-            clue = [0] * _CASES_LINISH
+        clue = [0] * 5
+        for i in range(len(clue)):
+            # test multiple negative numbers at multiple different positions
             clue[i] = -(i + 1)
             with self.subTest(init_arg=clue):
                 self.assertRaises(ValueError, Nonoclue, clue)
@@ -19,12 +18,12 @@ class BasicInitialization(TestCase):
 
 class EmptyNonoclue(TestCase):
     def test_initialization(self):
-        for clue in [[0] * i for i in range(_CASES_LINISH)]:
-            with self.subTest(init_arg=clue):
-                self.assertEqual(Nonoclue(clue).clue, [])
+        self.assertEqual(Nonoclue([]).clue, [])
+        self.assertEqual(Nonoclue([0]).clue, [])
+        self.assertEqual(Nonoclue([0, 0, 0]).clue, [])
 
     def test_satisfied(self):
-        for sol in itertools.product((False, True), repeat=_CASES_EXPISH):
+        for sol in itertools.product((False, True), repeat=4):
             with self.subTest(sequence=sol):
                 self.assertEqual(Nonoclue([]).satisfied_by(sol),
                                  not any(sol))
