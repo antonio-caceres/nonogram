@@ -46,3 +46,26 @@ class EmptyNonoclue(TestCase):
             with self.subTest(sequence=sol):
                 self.assertEqual(Nonoclue([]).satisfied_by(sol),
                                  not any(sol))
+
+
+class DunderMethods(TestCase):
+    def setUp(self):
+        self.all_cases = []
+        full_clue = list(range(1, 6))
+        for i in range(1, len(full_clue) + 1):
+            clue = full_clue[:i]
+            self.all_cases.append((Nonoclue(clue), clue))
+
+    def test_len(self):
+        for clue, lst in self.all_cases:
+            self.assertEqual(len(clue), len(lst))
+
+    def test_repr(self):
+        for clue, lst in self.all_cases:
+            self.assertEqual(repr(clue), f"Nonoclue({lst})")
+
+    def test_getitem(self):
+        for clue, lst in self.all_cases:
+            for i, x in enumerate(lst):
+                self.assertEqual(clue[i], lst[i])
+
