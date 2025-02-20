@@ -243,6 +243,14 @@ class Nonoclue:
     def __getitem__(self, key):
         return self.clue[key]
 
+    @staticmethod
+    def _bool_iter(sequence, bool_map):
+        """Helper iterator for use in :py:meth:`~Nonoclue.satisfied_by`."""
+        for itm in sequence:
+            yield bool_map(itm)
+        # fencepost here so the satisfaction algorithm doesn't need it
+        yield False
+
     def satisfied_by(self, sequence, bool_map=bool):
         """Determine if a boolean sequence satisfies the nonoclue.
 
@@ -263,15 +271,12 @@ class Nonoclue:
         -----
         - Nonoclues themselves do not impose a total length.
         """
-        # TODO: Build an iterator to do this computation lazily if bool_map is expensive.
-        bool_sequence = [bool_map(x) for x in sequence] + [False]  # add fencepost for last line
-
         cur_hint = 0
         line = 0
 
         # TODO: Fail this as early as possible.
         # DepTODO: Provide additional context around where it fails.
-        for square in bool_sequence:
+        for square in Nonoclue._bool_iter(sequence, bool_map):
             line += square
             if not square and line > 0:  # non-empty line finished
                 if (cur_hint == len(self) or  # line should not exist
