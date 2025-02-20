@@ -292,6 +292,18 @@ class Nonoclue:
 class Nonogram:
     """The row clues and column clues that form a nonogram puzzle."""
 
+    @staticmethod
+    def _init_clues(clue_seq):
+        clues = [elem if isinstance(elem, Nonoclue) else Nonoclue(elem) for elem in clue_seq]
+
+        start_idx, end_idx = 0, len(clues)
+        while start_idx < end_idx and not clues[start_idx]:
+            start_idx += 1
+        while end_idx > start_idx and not clues[end_idx - 1]:
+            end_idx -= 1
+
+        return clues[start_idx:end_idx]
+
     def __init__(self, rows, cols):
         """Initialize a nonogram with a sequence of row clues and a sequence of column clues.
 
@@ -299,8 +311,10 @@ class Nonogram:
 
         Parameters
         ----------
-        rows, cols : Sequence[:py:class:`Nonoclue`]
+        rows, cols : Iterable[:py:class:`Nonoclue`]
             Clues imposed by the rows and the columns.
+            Initialization removes empty nonoclues at the beginning and end of the gram
+            and casts all elements to instances of :py:class:`Nonoclue`.
 
         Notes
         -----
@@ -309,14 +323,12 @@ class Nonogram:
 
         Better to defer all solution verification to the solver.
         """
-        # TODO: Do empty Nonoclue trimming at the beginning and end.
-        self.rows, self.cols = rows, cols
+        self.rows, self.cols = Nonogram._init_clues(rows), Nonogram._init_clues(cols)
 
     @property
     def width(self) -> int:
         """Total number of columns (i.e., number of squares in a row)."""
         return len(self.cols)
-
 
     @property
     def height(self) -> int:
