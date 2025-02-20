@@ -4,7 +4,8 @@ import json
 
 def parse_rule_input():
     print("For each rule, input the line lengths separated by spaces.\n"
-          "Enter an empty rule to conclude the nonogram.")
+          "Conclude rule entry by entering a new line.\n"
+          "(Enter \"0\" for a rule without any lines.)")
     rules = []
     while row := input("> "):
         rules.append([int(token) for token in row.split()])
