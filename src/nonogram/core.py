@@ -1,6 +1,4 @@
 """Classes for representing and solving nonograms."""
-# TODO: Write some repr methods.
-
 
 # TODO: Move this into an abstract class and build
 #   additional implementations for sparse grids and cached bool_map grids.
@@ -84,6 +82,19 @@ class Nonogrid:
     def bool_map(self):
         """Function used to map values in the grid to booleans."""
         return self._bool_map
+
+    def __repr__(self):
+        return "".join((f"{self.__class__}(",
+                        f"{self.height}, ",
+                        f"{self.width}, ",
+                        f"default_val={self._default_val}, ",
+                        f"bool_map={self._bool_map}, ",
+                        f"data={self._grid}, ",
+                        f")"))
+
+    def __str__(self):
+        # TODO can I write a smart __str__ that makes a nice grid?
+        return str([list(r) for r in self.rows()])
 
     def _validate_idx(self, idx):
         r, c = idx
@@ -226,6 +237,9 @@ class Nonoclue:
         """Number of continuous lines of filled-in squares in the clue."""
         return len(self.clue)
 
+    def __repr__(self):
+        return f"{self.__class__}({self.clue})"
+
     def __getitem__(self, key):
         return self.clue[key]
 
@@ -303,6 +317,9 @@ class Nonogram:
     def height(self) -> int:
         """Total number of rows (i.e., number of squares in a column)."""
         return len(self.rows)
+
+    def __repr__(self):
+        return f"{self.__class__}({self.rows}, {self.cols})"
 
     # TODO: Remove the satisfaction methods from the Nonogram class.
 
