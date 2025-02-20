@@ -84,7 +84,7 @@ class Nonogrid:
         return self._bool_map
 
     def __repr__(self):
-        return "".join((f"{self.__class__}(",
+        return "".join((f"{type(self).__name__}(",
                         f"{self.height}, ",
                         f"{self.width}, ",
                         f"default_val={self._default_val}, ",
@@ -238,7 +238,7 @@ class Nonoclue:
         return len(self.clue)
 
     def __repr__(self):
-        return f"{self.__class__}({self.clue})"
+        return f"{type(self).__name__}({self.clue})"
 
     def __getitem__(self, key):
         return self.clue[key]
@@ -324,7 +324,7 @@ class Nonogram:
         return len(self.rows)
 
     def __repr__(self):
-        return f"{self.__class__}({self.rows}, {self.cols})"
+        return f"{type(self).__name__}({self.rows}, {self.cols})"
 
     # TODO: Remove the satisfaction methods from the Nonogram class.
 
