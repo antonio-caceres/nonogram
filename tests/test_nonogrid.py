@@ -1,3 +1,4 @@
+
 import itertools
 from unittest import TestCase
 
@@ -84,7 +85,7 @@ class GridAccess(TestCase):
                                          grid,
                                          (side_len, side_len),
                                          getter,
-                                         None)
+                                         exp_default)
 
 
 class InvalidAccess(TestCase):
