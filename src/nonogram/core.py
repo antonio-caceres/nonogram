@@ -326,49 +326,63 @@ class Nonogram:
         self.rows, self.cols = Nonogram._init_clues(rows), Nonogram._init_clues(cols)
 
     @property
-    def width(self) -> int:
+    def width(self):
         """Total number of columns (i.e., number of squares in a row)."""
         return len(self.cols)
 
     @property
-    def height(self) -> int:
+    def height(self):
         """Total number of rows (i.e., number of squares in a column)."""
         return len(self.rows)
+
+    @property
+    def num_clues(self):
+        """Total number of clues in the nonogram."""
+        return self.width + self.height
 
     def __repr__(self):
         return f"{type(self).__name__}({self.rows}, {self.cols})"
 
-    # TODO: Remove the satisfaction methods from the Nonogram class.
-
     @staticmethod
-    def _rows_satisfied(row_clues, row_data, bool_map):
-        """Determine if an ordered set of row data satisfies an ordered set of clues."""
-        # TODO: Build a more rigorous fitter by removing all empty rows from
-        #  the beginning and end of both clue and data.
-        if (diff := len(row_data) > len(row_clues)) > 0:
-            # Extra rows of squares satisfy iff they are empty.
-            row_clues = list(row_clues) + [Nonoclue()] * diff
+    def _clue_sat_count(clues, data_iter, bool_map):
+        """Determine how many clues an iterator over data satisfies.
 
-        for i, clue in enumerate(row_clues):
-            # The empty list matches only with the empty clue (no lines).
-            row = row_data[i] if i < len(row_data) else []
+        Any fitting to `clues` and `data_iter` should be handled before calling this method.
 
-            if not clue.satisfied_by(row, bool_map):
-                return False
+        Raises
+        ------
+        ValueError
+            If the lengths of `clues` and `data_iter` do not match.
+        """
+        zipped = zip(clues, data_iter, strict=True)
+        return sum(clue.satisfied_by(line, bool_map) for clue, line in zipped)
 
-        return True
-
-    def satisfied_by(self, solution, bool_map=bool, row_major=True):
-        """Determine if a boolean array satisfies the nonogram.
+    def satisfied_count(self, grid):
+        """Determine how many clues in the nonogram are satisfied by a nonogrid.
 
         Parameters
         ----------
-        solution : Sequence[Sequence[T]]
+        grid : Nonogrid
+            Grid to be evaluated as a solution to the nonogram.
+
+        See Also
+        --------
+        :py:meth:`Nonoclue.satisfied_by`
+        """
+        # TODO: Write fitting algorithm or document that fitting must be done before calling.
+        # TODO: Check width and height to match.
+        row_clue_count = Nonogram._clue_sat_count(self.rows, grid.rows(), grid.bool_map)
+        col_clue_count = Nonogram._clue_sat_count(self.cols, grid.cols(), grid.bool_map)
+        return row_clue_count + col_clue_count
+
+
+    def satisfied_by(self, grid):
+        """Determine if a nonogrid satisfies the nonogram.
+
+        Parameters
+        ----------
+        grid : Nonogrid
             Two-dimensional array of objects to match to squares.
-        bool_map : Callable[[T], bool], default=bool
-            Return whether an object represents a filled or empty square.
-        row_major : bool, default=True
-            If the solution is in row-major order.
 
         Returns
         -------
@@ -378,19 +392,4 @@ class Nonogram:
         --------
         :py:meth:`Nonoclue.satisfied_by`
         """
-        if not row_major:  # reduce to the row-major case
-            return Nonogram(self.cols, self.rows).satisfied_by(solution, bool_map)
-
-        # TODO: This rotation is the only component actually enforcing a square `solution`.
-        #  Can I build an algorithm where `solution` just is a HashSet of coordinate membership?
-        #  Probably unwise. Nonograms are generally dense so a hashset seems inefficient.
-        # TODO: Maybe I can build a NonoSol class to abstract away the 2D array behind a class,
-        #  and just have this method create a NonoSol from `solution`.
-        col_data = []
-        for i in range(len(solution[0])):
-            col_data.append([solution[j][i] for j in range(len(solution))])
-
-        return all([
-            Nonogram._rows_satisfied(self.rows, solution, bool_map),
-            Nonogram._rows_satisfied(self.cols, col_data, bool_map)
-        ])
+        return self.satisfied_count(grid) == self.num_clues
