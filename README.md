@@ -8,7 +8,7 @@ I built this for my application to the [Recurse Center](https://www.recurse.com/
 I wrote this project for my own enjoyment, but also (pretty explicitly) to demonstrate to others
 how I like to program when I have full control over a project.
 
-As of `2025FEB14`, I've spent an average of ~1.5 hours/day for 16 days on this project,
+As of `2025FEB20`, I've spent an average of ~1.5 hours/day for 16 days on this project,
 including programming, documenting, or algorithm design.
 
 Since there's lots of code, here are a few notable things to look at:
@@ -37,3 +37,5 @@ Constraints were imposed both by the Recurse Center and by myself.
 
 I use [`uv`](https://github.com/astral-sh/uv).
 Clone the repo and `uv run main.py` should work out of the box.
+
+Otherwise, try running `python3 -m main` with at least Python 3.12.
