@@ -29,7 +29,6 @@ class NonogramDataset(NamedTuple):
 #  the JSON methods into a separate utilities file that comes with the package.
 class NonogramDatasetLoader(Enum):
     BASIC = "basegrams.json"
-    EDGE = "edgegrams.json"
     LARGE_WITH_UNIQUE = "uniquegrams.json"
 
     _DATA_FILE_PREFIX = nonmember(Path("data"))
