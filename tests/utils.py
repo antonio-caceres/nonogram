@@ -16,10 +16,10 @@ class NonogramJSON(TypedDict, total=False):
     width: int
     # Nonograms with explicit solutions included to test the solution verification methods.
     # We assume the solution verification method works for test cases without a solution.
-    sol: Sequence[Sequence[bool]]
+    sol: list[list[bool]]
 
 
-class NonogramDataset(NamedTuple):
+class NonogramDataset(TypedDict):
     name: str
     desc: str
     data: list[NonogramJSON]
@@ -31,10 +31,11 @@ class NonogramDatasetLoader(Enum):
     BASIC = "basegrams.json"
     LARGE_WITH_UNIQUE = "uniquegrams.json"
 
-    _DATA_FILE_PREFIX = nonmember(Path("data"))
+    _DATA_FILE_PREFIX = nonmember(Path("tests", "data"))
 
-    def load(self):
+    def load(self) -> NonogramDataset:
         # noinspection PyUnresolvedReferences
         filepath = NonogramDatasetLoader._DATA_FILE_PREFIX.joinpath(self.value)
         with open(filepath, mode="rt") as f:
+            # TODO: why am I not using the classes I made?
             return json.load(f)
