@@ -1,7 +1,10 @@
+
 import itertools
 from unittest import TestCase
 
 from nonogram.core import Nonoclue
+
+from .utils import NonogramDatasetLoader as Loader
 
 
 class Initialization(TestCase):
@@ -69,3 +72,25 @@ class DunderMethods(TestCase):
             for i, x in enumerate(lst):
                 self.assertEqual(clue[i], lst[i])
 
+
+class SatisfiedBy(TestCase):
+    def setUp(self):
+        basic_grams = Loader.BASIC.load()["data"]
+        self.all_cases = set()  # remove duplicate clues across nonograms
+        for gram in basic_grams:
+            row_clues = gram["clues"]["row"]
+            col_clues = gram["clues"]["col"]
+            solution = gram["sol"]
+            # turn all of the lists into tuples so they are hashable
+            for i, clue in enumerate(row_clues):
+                row = tuple(solution[i])
+                self.all_cases.add((tuple(clue), row))
+            for j, clue in enumerate(col_clues):
+                col = tuple([solution[i][j] for i in range(len(solution))])
+                self.all_cases.add((tuple(clue), col))
+
+    def test_satisfied_by(self):
+        for clue, sol in self.all_cases:
+
+            with self.subTest(clue=clue, sequence=sol):
+                self.assertTrue(Nonoclue(clue).satisfied_by(sol))
