@@ -36,6 +36,7 @@ Since there's lots of code, here are a few notable things to look at:
 - An example of my thought process when encountering a software paradigm I'm unsure
   how to implement can be found in the docstring of the class `SolveFailure` in the
   `src/nonogram/solve/core.py`.
+- An example of a module refactor can be found in commit `b4a2ecc7`.
 
 #### Project Constraints
 
