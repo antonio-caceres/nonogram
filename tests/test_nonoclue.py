@@ -82,6 +82,28 @@ class SatisfiedBy(TestCase):
             with self.subTest(clue=clue, sequence=sol):
                 self.assertTrue(Nonoclue(clue).satisfied_by(sol))
 
+    def test_unsatisfactory_long(self):
+        for i in range(1, 6):
+            self.assertFalse(Nonoclue(i).satisfied_by([True] * i * 2))
+
+    def test_unsatisfactory_short(self):
+        for clue in ([1], [1, 1], [2], [2, 1], [1, 2], [3], [4]):
+            self.assertFalse(Nonoclue(clue).satisfied_by([True] * 5))
+
+    def test_unsatisfactory_mismatch(self):
+        for seq in itertools.product([False, True], repeat=4):
+            seq = tuple(seq)
+            if seq != (True, False, True, True):
+                self.assertFalse(Nonoclue(1, 2).satisfied_by(seq))
+            if seq not in {(True, False, True, False),
+                           (True, False, False, True),
+                           (False, True, False, True)}:
+                self.assertFalse(Nonoclue(1, 1).satisfied_by(seq))
+            if seq not in {(True, True, True, False),
+                           (False, True, True, True)}:
+                self.assertFalse(Nonoclue(3).satisfied_by(seq))
+            self.assertFalse(Nonoclue(5).satisfied_by(seq))
+
 
 class EmptyNonoclue(TestCase):
     def test_initialization(self):
@@ -94,4 +116,3 @@ class EmptyNonoclue(TestCase):
             with self.subTest(sequence=sol):
                 self.assertEqual(Nonoclue([]).satisfied_by(sol),
                                  not any(sol))
-
