@@ -22,6 +22,7 @@ class Nonogrid:
 
     - Returning a list could mislead users into thinking these methods can mutate the entire row.
     """
+
     def _inf_default_gen(self, iterator, default):
         # This is an **infinite** iterator and should *not* be used in a loop.
         yield from iterator
@@ -60,11 +61,6 @@ class Nonogrid:
         return cls(nonogram.height, nonogram.width, *args, **kwargs)
 
     @property
-    def dims(self):
-        """Grid dimensions as a tuple *(height, width)*."""
-        return self._height, self._width
-
-    @property
     def height(self):
         """Number of rows in the nonogram grid."""
         return self._height
@@ -73,6 +69,11 @@ class Nonogrid:
     def width(self):
         """Number of columns in the nonogram grid."""
         return self._width
+
+    @property
+    def dims(self):
+        """Grid dimensions as a tuple *(height, width)*."""
+        return self.height, self.width
 
     def __repr__(self):
         return "".join((f"{type(self).__name__}(",
@@ -275,6 +276,7 @@ class Nonoclue:
 
 class Nonogram:
     """The row clues and column clues that form a nonogram puzzle."""
+    # TODO: Write fitting algorithm to call as a static method.
 
     @staticmethod
     def _init_clues(clue_seq):
@@ -320,6 +322,11 @@ class Nonogram:
         return len(self.rows)
 
     @property
+    def dims(self):
+        """Nonogram dimensions as a tuple *(height, width)*."""
+        return self.height, self.width
+
+    @property
     def num_clues(self):
         """Total number of clues in the nonogram."""
         return self.width + self.height
@@ -349,12 +356,15 @@ class Nonogram:
         grid : Nonogrid
             Grid to be evaluated as a solution to the nonogram.
 
-        See Also
-        --------
-        :py:meth:`Nonoclue.satisfied_by`
+        Raises
+        ------
+        ValueError
+            If the height and width of the grid and nonogram do not match.
         """
-        # TODO: Write fitting algorithm or document that fitting must be done before calling.
-        # TODO: Check width and height to match.
+        if self.dims != grid.dims:
+            raise ValueError(f"Dimensions (height, width) of grid {grid.dims} "
+                             f"do not match nonogram {self.dims}.")
+
         row_clue_count = Nonogram._clue_sat_count(self.rows, grid.rows())
         col_clue_count = Nonogram._clue_sat_count(self.cols, grid.cols())
         return row_clue_count + col_clue_count
@@ -372,8 +382,13 @@ class Nonogram:
         -------
         If all row clue and column clue constraints are satisfied by `solution`.
 
+        Raises
+        ------
+        ValueError
+            If the height and width of the grid and nonogram do not match.
+
         See Also
         --------
-        :py:meth:`Nonoclue.satisfied_by`
+        :py:meth:`Nonogram.satisfied_count`
         """
         return self.satisfied_count(grid) == self.num_clues
