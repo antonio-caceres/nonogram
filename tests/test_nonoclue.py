@@ -37,20 +37,6 @@ class InitializationErrors(TestCase):
             with self.subTest(init_arg=clue):
                 self.assertRaises(ValueError, Nonoclue, clue)
 
-
-class EmptyNonoclue(TestCase):
-    def test_initialization(self):
-        self.assertEqual(Nonoclue([]).clue, [])
-        self.assertEqual(Nonoclue([0]).clue, [])
-        self.assertEqual(Nonoclue([0, 0, 0]).clue, [])
-
-    def test_satisfied(self):
-        for sol in itertools.product((False, True), repeat=4):
-            with self.subTest(sequence=sol):
-                self.assertEqual(Nonoclue([]).satisfied_by(sol),
-                                 not any(sol))
-
-
 class DunderMethods(TestCase):
     def setUp(self):
         self.all_cases = []
@@ -74,9 +60,10 @@ class DunderMethods(TestCase):
 
 
 class SatisfiedBy(TestCase):
-    def setUp(self):
+    @staticmethod
+    def _load_satisfactory_cases():
         basic_grams = Loader.BASIC.load()["data"]
-        self.all_cases = set()  # remove duplicate clues across nonograms
+        all_cases = set()  # remove duplicate clues across nonograms
         for gram in basic_grams:
             row_clues = gram["clues"]["row"]
             col_clues = gram["clues"]["col"]
@@ -84,13 +71,27 @@ class SatisfiedBy(TestCase):
             # turn all of the lists into tuples so they are hashable
             for i, clue in enumerate(row_clues):
                 row = tuple(solution[i])
-                self.all_cases.add((tuple(clue), row))
+                all_cases.add((tuple(clue), row))
             for j, clue in enumerate(col_clues):
                 col = tuple([solution[i][j] for i in range(len(solution))])
-                self.all_cases.add((tuple(clue), col))
+                all_cases.add((tuple(clue), col))
+        return all_cases
 
-    def test_satisfied_by(self):
-        for clue, sol in self.all_cases:
-
+    def test_satisfactory(self):
+        for clue, sol in SatisfiedBy._load_satisfactory_cases():
             with self.subTest(clue=clue, sequence=sol):
                 self.assertTrue(Nonoclue(clue).satisfied_by(sol))
+
+
+class EmptyNonoclue(TestCase):
+    def test_initialization(self):
+        self.assertEqual(Nonoclue([]).clue, [])
+        self.assertEqual(Nonoclue([0]).clue, [])
+        self.assertEqual(Nonoclue([0, 0, 0]).clue, [])
+
+    def test_satisfied(self):
+        for sol in itertools.product((False, True), repeat=4):
+            with self.subTest(sequence=sol):
+                self.assertEqual(Nonoclue([]).satisfied_by(sol),
+                                 not any(sol))
+
