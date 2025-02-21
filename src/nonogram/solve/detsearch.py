@@ -2,7 +2,7 @@
 
 from itertools import product
 
-from nonogram import Nonogrid
+from nonogram import NonogridArray
 from nonogram.solve.core import SolveFailure, NonogramSolver
 
 
@@ -29,7 +29,7 @@ class NaiveSolver(NonogramSolver):
         rows = product([False, True], repeat=self.nonogram.width)
         grid_data = product(list(rows), repeat=self.nonogram.height)
         for data in grid_data:
-            yield Nonogrid.for_nonogram(self.nonogram, data)
+            yield NonogridArray.for_nonogram(self.nonogram, data)
 
 
     def max_sat(self, collect=False):
