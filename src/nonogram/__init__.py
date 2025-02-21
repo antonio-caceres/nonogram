@@ -1,2 +1,3 @@
 
-from .core import Nonogram, Nonogrid
+from .gram import Nonogram
+from .grid import Nonogrid

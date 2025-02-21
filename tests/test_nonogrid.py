@@ -2,7 +2,7 @@
 import itertools
 from unittest import TestCase
 
-from nonogram.core import Nonogrid
+from nonogram.grid import Nonogrid
 
 
 class BasicPropertyInitialization(TestCase):

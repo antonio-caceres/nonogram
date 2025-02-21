@@ -2,7 +2,7 @@
 import itertools
 from unittest import TestCase
 
-from nonogram.core import Nonoclue
+from nonogram.gram import Nonoclue
 
 from .utils import NonogramDatasetLoader as Loader
 
