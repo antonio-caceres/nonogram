@@ -1,4 +1,4 @@
-"""Classes for representing and solving nonograms."""
+"""Representations of nonogram clues and puzzles."""
 
 class Nonoclue:
     """A clue to either a row or column of a nonogram puzzle.
@@ -162,8 +162,6 @@ class Nonogram:
     def _clue_sat_count(clues, data_iter):
         """Determine how many clues an iterator over data satisfies.
 
-        Any fitting to `clues` and `data_iter` should be handled before calling this method.
-
         Raises
         ------
         ValueError
@@ -177,7 +175,7 @@ class Nonogram:
 
         Parameters
         ----------
-        grid : Nonogrid
+        grid : :py:class:`nonogram.grid.Nonogrid`
             Grid to be evaluated as a solution to the nonogram.
 
         Raises
@@ -199,7 +197,7 @@ class Nonogram:
 
         Parameters
         ----------
-        grid : Nonogrid
+        grid : :py:class:`nonogram.grid.Nonogrid`
             Two-dimensional array of objects to match to squares.
 
         Returns
