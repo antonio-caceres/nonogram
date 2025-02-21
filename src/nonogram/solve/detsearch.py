@@ -1,9 +1,8 @@
 """Nonogram solvers that search a space which must contain the solution if one exists."""
 
-from itertools import chain, product
+from itertools import product
 
 from nonogram import Nonogrid
-from nonogram.core import Nonoclue
 from nonogram.solve.core import SolveFailure, NonogramSolver
 
 
