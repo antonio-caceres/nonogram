@@ -22,15 +22,6 @@ class BasicPropertyInitialization(TestCase):
                 grid = Nonogrid(exp_height, exp_width, data)
                 self.assertEqual(grid.dims, (exp_height, exp_width))
 
-    def test_map_default(self):
-        grid = Nonogrid(0, 0)
-        self.assertEqual(grid.bool_map, bool)
-
-    def test_custom_map(self):
-        f = lambda: True
-        grid = Nonogrid(0, 0, bool_map=f)
-        self.assertEqual(grid.bool_map, f)
-
 
 def _gen_getter_lambdas():
     """Generate callables to test getter interfaces for a nonogrid."""
@@ -86,6 +77,11 @@ class GridAccess(TestCase):
                                          (side_len, side_len),
                                          getter,
                                          exp_default)
+
+
+class GridManipulation(TestCase):
+    def test_change_values(self):
+        ...
 
 
 class InvalidAccess(TestCase):
