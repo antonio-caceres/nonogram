@@ -1,3 +1,5 @@
+# TODO: Restructure this into tests of the abstract base class
+#  and inherit from those tests to test the array implementation.
 
 import itertools
 from unittest import TestCase
