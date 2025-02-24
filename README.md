@@ -24,7 +24,7 @@ Otherwise, try running `python3 -m main` with at least Python 3.12.
 I wrote this project for my own enjoyment, but also (pretty explicitly) to demonstrate to others
 how I like to program when I have full control over a project.
 
-As of `2025FEB21`, I've spent an average of ~1.5 hours/day for 23 days on this project,
+As of `2025FEB24`, I've spent an average of ~1.5 hours/day for 26 days on this project,
 including programming, documenting, or algorithm design.
 
 Since there's lots of code, here are a few notable things to look at:
@@ -35,8 +35,10 @@ Since there's lots of code, here are a few notable things to look at:
   whether that's myself or another program user.
 - An example of my thought process when encountering a software paradigm I'm unsure
   how to implement can be found in the docstring of the class `SolveFailure` in the
-  `src/nonogram/solve/core.py`.
-- An example of a module refactor can be found in commit `b4a2ecc`.
+  `src/nonogram/solve/abc.py`.
+- My independent reading (in 2023) of Riordan's *Introduction to Combinatorial Analysis* paid off
+  in the method `src/nonogram/solve/utils.py:.ClueSolutions.__len__` and its proof.
+- I'm proud of the module refactors I did in commits `b4a2ecc` and `036cc91`.
 
 #### Project Constraints
 
