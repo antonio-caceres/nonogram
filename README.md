@@ -40,7 +40,7 @@ Since there's lots of code, here are a few notable things to look at:
   how to implement can be found in the docstring of the class `SolveFailure` in the
   `src/nonogram/solve/abc.py`.
 - My independent reading (in 2023) of Riordan's *Introduction to Combinatorial Analysis* paid off
-  in the method `src/nonogram/solve/utils.py:.ClueSolutions.__len__` and its proof.
+  in the method `src/nonogram/solve/utils.py:ClueSolutions.__len__` and its proof.
 - I'm proud of the module refactors I did in commits `b4a2ecc` and `036cc91`.
 
 #### Project Constraints
