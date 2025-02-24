@@ -36,11 +36,12 @@ Since there's lots of code, here are a few notable things to look at:
   I've documented decision tradeoffs there, and I hope to reveal how much I focus on
   *the influence of current design decisions on future programmer behavior*,
   whether that's myself or another program user.
-- An example of my thought process when encountering a software paradigm I'm unsure
-  how to implement can be found in the docstring of the class `SolveFailure` in the
-  `src/nonogram/solve/abc.py`.
+- An example of my thought process when encountering a software paradigm I'm unsure how to
+  implement can be found in the docstring of the class `SolveFailure`, found in
+  [`solve/abc.py`](https://github.com/antonio-caceres/nonogram/blob/main/src/nonogram/solve/abc.py).
 - My independent reading (in 2023) of Riordan's *Introduction to Combinatorial Analysis* paid off
-  in the method `src/nonogram/solve/utils.py:ClueSolutions.__len__` and its proof.
+  in the method `ClueSolutions.__len__` and its proof, found in
+  [`solve/utils.py`](https://github.com/antonio-caceres/nonogram/blob/main/src/nonogram/solve/utils.py).
 - I'm proud of the module refactors I did in commits
   [`b4a2ecc7`](https://github.com/antonio-caceres/nonogram/commit/b4a2ecc7)
   and [`036cc912`](https://github.com/antonio-caceres/nonogram/commit/036cc912).
