@@ -17,6 +17,9 @@ I built this for my application to the [Recurse Center](https://www.recurse.com/
 I use [`uv`](https://github.com/astral-sh/uv).
 Clone the repo and `uv run main.py` should work out of the box.
 
+(Right now, nonograms of at most size 4 by 4 can be solved until I develop a more sophisticated solver,
+likely by 2/27.)
+
 Otherwise, try running `python3 -m main` with at least Python 3.12.
 
 ### Reading this Repository
