@@ -100,7 +100,6 @@ class Nonoclue:
 
 class Nonogram:
     """The row clues and column clues that form a nonogram puzzle."""
-    # TODO: Write fitting algorithm to call as a static method.
 
     @staticmethod
     def _init_clues(clue_seq):
@@ -153,7 +152,7 @@ class Nonogram:
     @property
     def num_clues(self):
         """Total number of clues in the nonogram."""
-        return self.width + self.height
+        return self.height + self.width
 
     def __repr__(self):
         return f"{type(self).__name__}({self.rows}, {self.cols})"
@@ -170,6 +169,8 @@ class Nonogram:
         zipped = zip(clues, data_iter, strict=True)
         return sum(clue.satisfied_by(line) for clue, line in zipped)
 
+    # TODO: Write fitting algorithm to call as a static method.
+
     def satisfied_count(self, grid):
         """Determine how many clues in the nonogram are satisfied by a nonogrid.
 
@@ -183,6 +184,7 @@ class Nonogram:
         ValueError
             If the height and width of the grid and nonogram do not match.
         """
+        # TODO: Add 'fit' or 'strict' parameter to this method instead of always raising.
         if self.dims != grid.dims:
             raise ValueError(f"Dimensions (height, width) of grid {grid.dims} "
                              f"do not match nonogram {self.dims}.")
@@ -213,4 +215,5 @@ class Nonogram:
         --------
         :py:meth:`Nonogram.satisfied_count`
         """
+        # TODO: Add 'fit' or 'strict' parameter to this method.
         return self.satisfied_count(grid) == self.num_clues
