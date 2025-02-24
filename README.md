@@ -17,8 +17,8 @@ I built this for my application to the [Recurse Center](https://www.recurse.com/
 I use [`uv`](https://github.com/astral-sh/uv).
 Clone the repo and `uv run main.py` should work out of the box.
 
-(Right now, nonograms of at most size 4 by 4 can be solved until I develop a more sophisticated solver,
-likely by 2/27.)
+See [Project Goals and Current Status](#project-goals-and-current-status)
+for what the project currently does.
 
 Otherwise, try running `python3 -m main` with at least Python 3.12.
 
@@ -73,6 +73,8 @@ for the program to decide what I liked the most; I've documented several of thes
 
 For the actual solvers, as of `2025FEB20`, there is only a brute force solver with no
 optimizations, and this solver takes unreasonably long on puzzles larger than 4 by 4.
+Follow the [instructions](#instructions) to use this solver with a manually entered
+nonogram using `main.py`.
 
 Here are some of my future goals for solvers:
 - Optimize the solver that searches the entire space using BnB.
