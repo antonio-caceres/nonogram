@@ -17,13 +17,14 @@ class NaiveSolver(NonogramSolver):
         frac_sat, sol = self.max_sat(collect=collect)
         if frac_sat == len(self.nonogram.rows) + len(self.nonogram.cols):
             return sol
+        else:
+            return SolveFailure.DNE
 
     def _grid_iterator(self):
         rows = product([False, True], repeat=self.nonogram.width)
         grid_data = product(list(rows), repeat=self.nonogram.height)
         for data in grid_data:
             yield NonogridArray.for_nonogram(self.nonogram, data)
-
 
     def max_sat(self, *, collect=False):
         maxim_num, maxim_list = 0, []
