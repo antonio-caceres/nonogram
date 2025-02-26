@@ -111,6 +111,8 @@ class Nonogram:
         while end_idx > start_idx and not clues[end_idx - 1]:
             end_idx -= 1
 
+        if start_idx == end_idx:
+            return [Nonoclue()]
         return clues[start_idx:end_idx]
 
     def __init__(self, rows, cols):
