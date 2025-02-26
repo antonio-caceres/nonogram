@@ -117,10 +117,11 @@ class ClueSolutions:
         """
         # Pycharm's typechecker doesn't know defining __len__ and __getitem__ makes a class iterable?
         # noinspection PyTypeChecker
-        divider_indices = range(self.target_length + 1 - sum(self.clue))
+        empty_count = self.target_length + 2 - sum(self.clue)
+        divider_indices = range(1, empty_count)
         for positions in itertools.combinations(divider_indices, len(self.clue)):
             # itertools.combinations guarantees that positions is sorted
-            pos_pairs = itertools.pairwise([0] + list(positions) + [self.target_length])
+            pos_pairs = itertools.pairwise([0] + list(positions) + [empty_count])
             gap_lengths = [b - a for a, b in pos_pairs]
             yield self._gaps_to_sol(gap_lengths)
 
