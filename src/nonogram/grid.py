@@ -183,6 +183,8 @@ class Nonogrid(ABC):
 class NonogridArray(Nonogrid):
     """Nonogrid implemented with an data array."""
 
+    # TODO: add initialization method that infers height and width from data
+    # TODO: add strict parameter
     def __init__(self, height, width, data=(), *, default_val=None):
         """Initialize a nonogrid and optionally fill in initial data.
 
