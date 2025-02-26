@@ -27,7 +27,7 @@ Otherwise, try running `python3 -m main` with at least Python 3.12.
 I wrote this project for my own enjoyment, but also (pretty explicitly) to demonstrate to others
 how I like to program when I have full control over a project.
 
-As of `2025FEB24`, I've spent an average of ~1.5 hours/day for 26 days on this project,
+As of `2025FEB26`, I've spent an average of $1.5 < h < 2$ hours/day for 28 days on this project,
 including programming, documenting, or algorithm design.
 
 Since there's lots of code, here are a few notable things to look at:
@@ -81,8 +81,12 @@ Solve progress noted below.
 
 Here are some of my future goals for solvers:
 - Optimize the solver that searches the entire space using BnB.
-- Create a solver designed specifically to find solutions (instead of the general MAXSAT problem)
-  by iterating the space that fixes either the rows or the columns to satisfaction.
+- Optimize the solver that iterates the space with fixed row solutions
+  - We can only check the columns that change between iterations.
+  - We can also build a cache for each column.
+  - Build the transpose optimization to do column iteration instead if faster.
+- Build a logical bounder (I got an idea for an FSA approach that might work,
+  but I do not know if it can find all solutions).
 - [Probabilistic Solver](#probabilistic-solver)
 
 ### Probabilistic Solver
