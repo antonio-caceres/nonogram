@@ -71,10 +71,13 @@ that interact with each other in a natural way.
 Most of my initial effort on this project involved trying various structures
 for the program to decide what I liked the most; I've documented several of these decisions.
 
-For the actual solvers, as of `2025FEB20`, there is only a brute force solver with no
-optimizations, and this solver takes unreasonably long on puzzles larger than 4 by 4.
-Follow the [instructions](#instructions) to use this solver with a manually entered
+Follow the [instructions](#instructions) to use the best solver with a manually entered
 nonogram using `main.py`.
+Solve progress noted below.
+
+- `2025FEB19`: Brute force solver with no optimizations; max size 4x4.
+- `2025FEB26`: Unoptimized, but slightly more clever, brute force solver;
+  max size 16x16 with warning for larger than 8x8.
 
 Here are some of my future goals for solvers:
 - Optimize the solver that searches the entire space using BnB.
