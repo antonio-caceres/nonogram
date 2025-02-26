@@ -1,5 +1,7 @@
 """Representations of nonogram clues and puzzles."""
 
+# TODO: Nonoclues are mutable; do we need to add sanity checks if the list is mutated
+#  or should I just make the list immutable?
 class Nonoclue:
     """A clue to either a row or column of a nonogram puzzle.
 
@@ -113,7 +115,7 @@ class Nonogram:
 
         if start_idx == end_idx:
             return [Nonoclue()]
-        return clues[start_idx:end_idx]
+        return tuple(clues[start_idx:end_idx])
 
     def __init__(self, rows, cols):
         """Initialize a nonogram with a sequence of row clues and a sequence of column clues.
@@ -134,17 +136,27 @@ class Nonogram:
 
         Better to defer all solution verification to the solver.
         """
-        self.rows, self.cols = Nonogram._init_clues(rows), Nonogram._init_clues(cols)
+        self._rows, self._cols = Nonogram._init_clues(rows), Nonogram._init_clues(cols)
 
     @property
-    def width(self):
-        """Total number of columns (i.e., number of squares in a row)."""
-        return len(self.cols)
+    def rows(self):
+        """Tuple containing the row clues of this nonogram."""
+        return self._rows
+
+    @property
+    def cols(self):
+        """Tuple containing the column clues of this nonogram."""
+        return self._cols
 
     @property
     def height(self):
         """Total number of rows (i.e., number of squares in a column)."""
         return len(self.rows)
+
+    @property
+    def width(self):
+        """Total number of columns (i.e., number of squares in a row)."""
+        return len(self.cols)
 
     @property
     def dims(self):
