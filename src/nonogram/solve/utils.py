@@ -7,13 +7,22 @@ from nonogram.gram import Nonoclue
 
 
 class ClueSolutions:
-    """Iterable over all the possible solutions to a nonoclue.
+    """Iterable over all possible solutions to a nonoclue.
 
     :py:class:`ClueSolutions` generates its solutions with a combinatorial construction.
 
     The documentation in this class constitutes a proof of correctness of
     this construction as well as corollary properties.
 
+    Attributes
+    ----------
+    clue : :py:class:`~nonogram.gram.Nonoclue`
+        Clue to generate solutions for.
+    target_length : int
+        Length of solutions to generate.
+
+    Notes
+    -----
     Correctness
     ===========
     Let the clue have length :math:`p` and hints :math:`(x_1, ..., x_p)`,
@@ -38,7 +47,7 @@ class ClueSolutions:
     and end that must be empty, hence :math:`n + 2`.
 
     Construction
-    ------------
+    ===========
     **Intuition**:
     To find a solution, we need gap lengths :math:`(g_0, ..., g_p)` that sum to :math:`n + 2 - X`
     and are all positive.
@@ -74,7 +83,7 @@ class ClueSolutions:
 
     We invert our construction; given :math:`(g_0, ..., g_p)`,
     let :math:`l_0 = 0, l_{p + 1} = T` and, for all :math:`k` between 1 and :math:`p`,
-    let :math:`l_k = \sum_{i = 0}^{k - 1} g_i`.
+    let :math:`l_k = \\sum_{i = 0}^{k - 1} g_i`.
     We satisfy :math:`g_i = l_{i + 1} - l_i`.
     All :math:`g_i` are positive and their total sum is :math:`T`,
     so :math:`l_0 = 0 < l_1 < ... < l_p < l_{p + 1} = T`.
@@ -88,19 +97,20 @@ class ClueSolutions:
     """
 
     def __init__(self, clue, target_length):
-        """Initialize a new iterable for solutions of a specific length.
-
-        Parameters
-        ----------
-        clue : :py:class:`~nonogram.gram.Nonoclue`
-            Nonoclue to solve.
-        target_length : int
-            Length of solutions to generate.
-        """
+        """Initialize a new iterable for solutions of a specific length."""
         self.clue = clue if isinstance(clue, Nonoclue) else Nonoclue(clue)
         self.target_length = target_length
 
-    def _iterate(self):
+    def _gaps_to_sol(self, gaps):
+        sol = []
+        for empty, filled in zip(gaps,
+                                 self.clue.clue + [0],  # add empty line at the end for fencepost
+                                 strict=True):  # fail fast
+            sol.extend([False] * empty)
+            sol.extend([True] * filled)
+        return sol[1:-1]  # reduce g_0 and g_p by 1
+
+    def _iterator(self):
         """Reusable iteration method.
 
         See :py:meth:`~ClueSolutions.__iter__` for algorithm and documentation.
@@ -112,13 +122,25 @@ class ClueSolutions:
             # itertools.combinations guarantees that positions is sorted
             pos_pairs = itertools.pairwise([0] + list(positions) + [self.target_length])
             gap_lengths = [b - a for a, b in pos_pairs]
-            # TODO: helper method to map gap lengths in a solution
-            yield ...
+            yield self._gaps_to_sol(gap_lengths)
 
     def __iter__(self):
         """Iterate over all solutions of the desired length that satisfy the nonoclue.
 
-        TODO: Come up with a formal description of how this method yields solutions.
+        Let :math:`p` be the length of the clue, :math:`X` be the sum of the filled squares
+        imposed by the clue, and :math:`n` be the desired solution length.
+        This method yields solutions as described in the class documentation;
+        specifically, it takes all the combinations of "divider indices" :math:`l_1, ..., l_p`
+        satisfying :math:`0 < l_1 < ... < l_p < n + 2 - X` for integer :math:`l_i`.
+
+        Those divider indices are then mapped to a sequence of gap lengths :math:`(g_0, ..., g_p)`
+        as described in the construction, and those gaps lengths are used to generate the yielded
+        boolean array.
+        (In this process, :math:`g_0` and :math:`g_p` are each reduced by 1, undoing the
+        combinatorial convenience of the algorithm to arrive at a solution of length :math:`n`.)
+
+        The solutions are yielded in a well-defined order due to the implementation of
+        :py:meth:`itertools.combinations`, which is described in the "Notes" section of this method.
 
         Returns
         -------
@@ -126,7 +148,8 @@ class ClueSolutions:
 
         Yields
         ------
-        TODO: Come up with a formal description of how this method yields solutions.
+        list[bool]
+            Boolean array of length :py:attr:`target_length` that satisfies the nonoclue.
 
         Notes
         -----
@@ -144,7 +167,9 @@ class ClueSolutions:
         and then moves the second to last line back one step before
         iterating over the last line again.
         """
-        return self._iterate_solutions()
+        # TODO: Do I need to copy `self` to avoid bugs if the user modifies `self`
+        #  in the iterable loop? Probably.
+        return self._iterator()
 
     # TODO: Run some speed tests, if this computation is a constraining factor
     #  add caching and/or add a new method that approximates length.
