@@ -33,3 +33,31 @@ class Initialization(TestCase):
                 nonoclue = Nonoclue(clue_arg)
                 self.assertEqual(repr(ClueSolutions(nonoclue, l)),
                                  f"ClueSolutions({repr(nonoclue)}, {l})")
+
+
+class NumSolutionCalculations(TestCase):
+    def test_empty_clue(self):
+        for l in range(1, 11):
+            self.assertEqual(len(ClueSolutions([], l),), 1)
+
+    def test_too_short(self):
+        for clue in ([1, 1, 1],
+                     [10],
+                     [7, 1, 3]):
+            for l in range(sum(clue) + len(clue) - 1):
+                with self.subTest(clue=clue, target_length=l):
+                    self.assertEqual(len(ClueSolutions(clue, l)), 0)
+
+    def test_exact_fit(self):
+        for l in range(1, 6):
+            # T = 2 cases
+            self.assertEqual(len(ClueSolutions(l, l)), 1)
+
+    def test_len(self):
+        for clue, l, exp_count in (
+                ([1, 1, 1], 5, 1),
+                ([1, 1, 1], 7, 10),
+                ([5], 10, 6),
+                ([2, 3], 10, 15),
+        ):
+            self.assertEqual(len(ClueSolutions(clue, l)), exp_count)
