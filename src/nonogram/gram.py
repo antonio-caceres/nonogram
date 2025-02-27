@@ -60,6 +60,11 @@ class Nonoclue:
     def __getitem__(self, key):
         return self.clue[key]
 
+    def __eq__(self, other):
+        if not isinstance(other, Nonoclue):
+            return NotImplemented
+        return self.clue == other.clue
+
     @staticmethod
     def _bool_iter(sequence):
         for itm in sequence:
