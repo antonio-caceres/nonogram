@@ -209,4 +209,6 @@ class ClueSolutions:
         branching and bounding algorithms, since :py:meth:`ClueSolutions.__iter__` is expensive.
         """
         # noinspection PyTypeChecker
-        return math.comb(self.target_length + 1 - sum(self.clue), len(self.clue))
+        if (num_objects := self.target_length + 2 - sum(self.clue)) < 1:
+            return 0
+        return math.comb(num_objects - 1, len(self.clue))
