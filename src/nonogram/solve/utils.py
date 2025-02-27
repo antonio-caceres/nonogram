@@ -97,7 +97,11 @@ class ClueSolutions:
     """
 
     def __init__(self, clue, target_length):
-        """Initialize a new iterable for solutions of a specific length."""
+        """Initialize a new iterable for solutions of a specific length.
+
+        Accepts any representation of a clue that can be cast into a
+        :py:class:`~nonogram.gram.Nonoclue`.
+        """
         self.clue = clue if isinstance(clue, Nonoclue) else Nonoclue(clue)
         self.target_length = target_length
 
@@ -160,16 +164,29 @@ class ClueSolutions:
         :py:meth:`itertools.combinations` yields in a sorted order;
         individually, each chosen set is provided as a sorted tuple
         (e.g., the set :math:`{7, 2, 5}` is represented by the tuple ``(2, 5, 7)``)
-        and the first sets returned are the sets with the lowest indicies
+        and the first sets returned are the sets with the lowest indices
         (e.g., 2-tuples chosen from ``(1, 2, 3)`` are ordered
         ``[(1, 2), (1, 3), (2, 3)]``).
 
-        TODO: Come up with a formal description of how this method yields solutions.
+        Therefore, this method yields solutions in the order that minimizes the
+        list of integers representing the positions of the filled-in blocks.
+        In other words, it minimizes first the position of the first block,
+        then the position of the second block, and so on, with the lowest
+        priority being the minimization of the final block.
 
-        Intuitively, this method first returns a solution with all lines placed as early
-        as possible, then iterates over solutions moving the last line back,
-        and then moves the second to last line back one step before
-        iterating over the last line again.
+        For example, for the clue ``(1, 2, 1)`` with solutions of length 8,
+        the ten solutions are yielded in the following order:
+
+        * ■ □ ■ ■ □ ■ □ □
+        * ■ □ ■ ■ □ □ ■ □
+        * ■ □ ■ ■ □ □ □ ■
+        * ■ □ □ ■ ■ □ ■ □
+        * ■ □ □ ■ ■ □ □ ■
+        * ■ □ □ □ ■ ■ □ ■
+        * □ ■ □ ■ ■ □ ■ □
+        * □ ■ □ ■ ■ □ □ ■
+        * □ ■ □ □ ■ ■ □ ■
+        * □ □ ■ □ ■ ■ □ ■
         """
         # TODO: Do I need to copy `self` to avoid bugs if the user modifies `self`
         #  in the iterable loop? Probably.
