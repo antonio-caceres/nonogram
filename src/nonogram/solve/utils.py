@@ -101,6 +101,9 @@ class ClueSolutions:
         self.clue = clue if isinstance(clue, Nonoclue) else Nonoclue(clue)
         self.target_length = target_length
 
+    def __repr__(self):
+        return f"{type(self)}({repr(self.clue)}, {self.target_length})"
+
     def _gaps_to_sol(self, gaps):
         sol = []
         for empty, filled in zip(gaps,
