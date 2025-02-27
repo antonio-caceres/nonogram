@@ -53,6 +53,14 @@ class DunderMethods(TestCase):
         for clue, lst in self.all_cases:
             self.assertEqual(repr(clue), f"Nonoclue({lst})")
 
+    def test_eq(self):
+        for clue, lst in self.all_cases:
+            self.assertEqual(clue, Nonoclue(lst))
+
+    def test_not_eq(self):
+        for (clue_a, _), (clue_b, _) in itertools.permutations(self.all_cases, r=2):
+            self.assertNotEqual(clue_a, clue_b)
+
     def test_getitem(self):
         for clue, lst in self.all_cases:
             for i, x in enumerate(lst):
