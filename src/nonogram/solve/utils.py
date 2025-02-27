@@ -106,7 +106,7 @@ class ClueSolutions:
         self.target_length = target_length
 
     def __repr__(self):
-        return f"{type(self)}({repr(self.clue)}, {self.target_length})"
+        return f"{type(self).__name__}({repr(self.clue)}, {self.target_length})"
 
     def _gaps_to_sol(self, gaps):
         sol = []
